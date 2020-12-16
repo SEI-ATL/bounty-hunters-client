@@ -25,6 +25,12 @@ class App extends Component {
     const json = await response.json()
     this.setState({ bounties: json.bounties, finishedLoading: true })
   }
+
+  reload = async () => {
+    const response = await fetch('http://localhost:3001/bounties')
+    const json = await response.json()
+    this.setState({ bounties: json.bounties, finishedLoading: true })
+  }
   
   render() {
     if (!this.state.finishedLoading) {
@@ -63,7 +69,7 @@ class App extends Component {
         />
         
         <Route path='/new'>
-          <New />
+          <New reload={this.reload}/>
         </Route>
 
         <Route path='/edit/:id'>

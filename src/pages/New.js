@@ -28,6 +28,7 @@ class New extends Component {
       body: JSON.stringify(this.state)
     }).then((res) => {
       res.json().then((json) => {
+        this.props.reload()
         this.props.history.push(`/show/${json.bounty._id}`)
       })
     })
