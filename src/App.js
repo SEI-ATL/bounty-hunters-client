@@ -15,17 +15,34 @@ class App extends Component {
     super()
 
     this.state = {
-      bounties: []
+      bounties: [],
+      finishedLoading: false
     }
   }
   
   async componentDidMount() {    
     const response = await fetch('http://localhost:3001/bounties')
     const json = await response.json()
-    this.setState({ bounties: json.bounties })
+    this.setState({ bounties: json.bounties, finishedLoading: true })
   }
   
   render() {
+    if (!this.state.finishedLoading) {
+      return (
+        <div className="App">
+          <h1>Loading...</h1>
+        </div>
+      )
+    }
+    
+    if (this.state.bounties.length === 0) {
+      return (
+        <div className="App">
+          <h1>No bounties to show!</h1>
+        </div>
+      )
+    }
+
     return (
       <div className="App">
         <Nav />
@@ -34,9 +51,16 @@ class App extends Component {
         <Route path='/' exact> <Home bounties={this.state.bounties} /> </Route>
 
         {/* TODO: use slugified name instead */}
-        <Route path='/show/:id'>
-          <Show />
-        </Route>
+        <Route
+          path='/show/:id'
+          render={(routeProps) => {
+            const bounty = this.state.bounties.find((b) => {
+              return b._id === routeProps.match.params.id
+            })
+
+            return <Show bounty={bounty} />
+          }}
+        />
         
         <Route path='/new'>
           <New />
