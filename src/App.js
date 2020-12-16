@@ -11,13 +11,27 @@ import Nav from './components/Nav'
 import './App.css';
 
 class App extends Component {
+  constructor() {
+    super()
+
+    this.state = {
+      bounties: []
+    }
+  }
+  
+  async componentDidMount() {    
+    const response = await fetch('http://localhost:3001/bounties')
+    const json = await response.json()
+    this.setState({ bounties: json.bounties })
+  }
+  
   render() {
     return (
       <div className="App">
         <Nav />
         
         <h1>App!</h1>
-        <Route path='/' exact> <Home /> </Route>
+        <Route path='/' exact> <Home bounties={this.state.bounties} /> </Route>
 
         {/* TODO: use slugified name instead */}
         <Route path='/show/:id'>
