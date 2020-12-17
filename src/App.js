@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Route, Link } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 
 import Home from './pages/Home'
 import Show from './pages/Show'
@@ -64,7 +64,7 @@ class App extends Component {
               return b._id === routeProps.match.params.id
             })
 
-            return <Show bounty={bounty} />
+            return <Show bounty={bounty} reload={this.reload} />
           }}
         />
         
@@ -72,9 +72,16 @@ class App extends Component {
           <New reload={this.reload}/>
         </Route>
 
-        <Route path='/edit/:id'>
-          <Edit />
-        </Route>
+        <Route
+          path='/edit/:id'
+          render={(routeProps) => {
+            const bounty = this.state.bounties.find((b) => {
+              return b._id === routeProps.match.params.id
+            })
+
+            return <Edit bounty={bounty} reload={this.reload}/>
+          }}
+        />
       </div>
     );
   }
